@@ -79,8 +79,8 @@ DELIMITER ;
 
 -- Insert sample data (optional)
 INSERT INTO customers (first_name, last_name, email, phone)
-VALUES ('John', 'Doe', 'john.doe@example.com', '0712000000'),
-       ('Jane', 'Wanjiru', 'jane.w@example.com', '0722000000');
+VALUES ('John', 'kamau', 'john.kamau@gmail.com', '0712000000'),
+       ('Jane', 'Wanjiru', 'jane.w@gmail.com', '0722000000');
 
 INSERT INTO products (name, sku, description, price, stock)
 VALUES ('USB Flash Drive 32GB', 'USB32-001', 'High-speed USB 3.0 flash drive', 8.50, 150),

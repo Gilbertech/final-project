@@ -1,56 +1,105 @@
-# final-project
-# E-commerce CRUD API (MySQL + Express)
+# E-commerce Database Schema
 
-## Overview
-Simple CRUD API implementing Products and Orders using MySQL. Order ⇄ Product is many-to-many using `order_items`.
+This project provides a MySQL database schema for a simple **e-commerce system**. It includes tables, relationships, triggers, and some sample data.
 
-## Requirements
-- Node.js (>=16)
-- MySQL server
-- npm
+---
 
-## Setup
+## 📂 File
 
-1. Clone repo
-2. Create DB:
-   - Import `sql/ecommerce_schema.sql` into your MySQL server:
-     `mysql -u root -p < sql/ecommerce_schema.sql`
-3. Copy `.env.example` to `.env` and edit database credentials.
-4. Install packages:
-   `npm install`
-5. Run server:
-   `npm run dev` (requires nodemon) or `npm start`
+* **`ecommerce_schema.sql`** → Contains SQL commands to create the database, tables, triggers, and insert sample records.
 
-Server will run on the port in `.env` (default 3000).
+---
 
-## API Endpoints
+## ⚙️ Features
 
-### Products
-- `GET /api/products` — list all products
-- `GET /api/products/:id` — get product by id
-- `POST /api/products` — create product
-  - Body: `{ "name": "Name", "sku": "SKU", "description": "...", "price": 10.50, "stock": 20 }`
-- `PUT /api/products/:id` — update product (partial)
-- `DELETE /api/products/:id` — delete product
+* **Customers**: Stores customer information.
+* **Products**: Stores product details, pricing, and stock levels.
+* **Orders**: Records customer orders with statuses.
+* **Order Items**: Maintains many-to-many relationships between orders and products.
+* **Triggers**: Automatically update `orders.total_amount` when order items are added, updated, or deleted.
 
-### Orders
-- `GET /api/orders` — list orders
-- `GET /api/orders/:id` — get order + items
-- `POST /api/orders` — create order
-  - Body example:
-    ```
-    {
-      "customer_id": 1,
-      "items": [
-        { "product_id": 1, "quantity": 2 },
-        { "product_id": 2, "quantity": 1 }
-      ]
-    }
-    ```
-- `PATCH /api/orders/:id/status` — update order status
-  - Body: `{ "status": "shipped" }` (allowed: pending, confirmed, shipped, delivered, cancelled)
-- `DELETE /api/orders/:id` — delete order (order_items cascade deleted)
+---
 
-## Notes
-- The SQL file includes triggers that adjust `orders.total_amount` whenever `order_items` change.
-- Error handling is minimal and intended for demonstration — for production, add validation, authentication, and better error reporting.
+## 🏗️ Database Structure
+
+### Tables
+
+1. **customers**
+
+   * id (PK)
+   * first_name, last_name
+   * email (unique)
+   * phone
+   * created_at
+
+2. **products**
+
+   * id (PK)
+   * name, sku (unique)
+   * description
+   * price (non-negative)
+   * stock (non-negative)
+   * created_at
+
+3. **orders**
+
+   * id (PK)
+   * customer_id (FK → customers.id)
+   * order_date
+   * status (`pending`, `confirmed`, `shipped`, `delivered`, `cancelled`)
+   * total_amount
+
+4. **order_items**
+
+   * id (PK)
+   * order_id (FK → orders.id)
+   * product_id (FK → products.id)
+   * quantity (> 0)
+   * unit_price (non-negative)
+   * line_total
+   * **Unique** (order_id, product_id)
+
+---
+
+## 🚀 Installation & Usage
+
+1. Clone this repository.
+2. Run the SQL script in MySQL:
+
+   ```bash
+   mysql -u root -p < ecommerce_schema.sql
+   ```
+3. The script will:
+
+   * Drop and recreate the `ecommerce_db` database
+   * Create all tables and triggers
+   * Insert sample customer and product data
+
+---
+
+## 📊 Sample Data
+
+Customers:
+
+* John kamau
+* Jane Wanjiru 
+
+Products:
+
+* USB Flash Drive 32GB – $8.50
+* Wireless Mouse – $12.00
+* Laptop Charger 65W – $25.00
+
+---
+
+## 📌 Notes
+
+* Uses **UTF-8** collation for multilingual support.
+* Triggers ensure data consistency in orders.
+* Example data included for quick testing.
+
+---
+
+## 📝 License
+
+This project is open-source and free to use for educational or commercial purposes.
